@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸运抽奖转盘（移动端适配版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+            font-family: "Microsoft YaHei", sans-serif;
+            padding: 20px 0;
+        }
+        .title {
+            font-size: clamp(24px, 6vw, 32px); /* 自适应字体 */
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: clamp(20px, 5vw, 35px);
+            text-shadow: 0 3px 6px rgba(0,0,0,0.08);
+            letter-spacing: 1px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        /* 转盘容器 - 响应式尺寸 */
+        .wheel-container {
+            position: relative;
+            width: clamp(300px, 80vw, 450px); /* 最小300px，最大450px，占屏幕80% */
+            height: clamp(300px, 80vw, 450px);
+            margin: 0 auto clamp(15px, 3vw, 20px);
+        }
+        /* 转盘主体 - 保持圆形比例 */
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ff6b6b 0% 60deg,
+                #4ecdc4 60deg 120deg,
+                #ffe66d 120deg 180deg,
+                #95e1d3 180deg 240deg,
+                #f38ba8 240deg 300deg,
+                #8896ab 300deg 360deg
+            );
+            position: relative;
+            box-shadow: 0 0 30px rgba(0,0,0,0.15), inset 0 0 20px rgba(255,255,255,0.3);
+            transition: transform 6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            cursor: pointer;
+            touch-action: manipulation; /* 优化触摸操作 */
+        }
+        /* 转盘中心圆点 - 自适应大小 */
+        .wheel::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: clamp(40px, 10vw, 50px);
+            height: clamp(40px, 10vw, 50px);
+            background: #2d3748;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.25), inset 0 2px 5px rgba(255,255,255,0.2);
+            z-index: 1;
+        }
+        /* 分区分割线 */
+        .wheel span {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            background: #fff;
+            transform-origin: center;
+        }
+        .wheel span:nth-child(1) { transform: rotate(60deg); }
+        .wheel span:nth-child(2) { transform: rotate(120deg); }
+        .wheel span:nth-child(3) { transform: rotate(180deg); }
+        .wheel span:nth-child(4) { transform: rotate(240deg); }
+        .wheel span:nth-child(5) { transform: rotate(300deg); }
+        /* 奖品文字 - 自适应大小和位置 */
+        .prize {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: clamp(20px, 5vw, 30px);
+            text-align: center;
+            color: #000;
+            font-weight: 600;
+            font-size: clamp(14px, 3.5vw, 18px);
+            letter-spacing: 0.5px;
+        }
+        .prize span {
+            display: inline-block;
+            width: clamp(90px, 25vw, 120px);
+            height: clamp(35px, 8vw, 45px);
+            line-height: clamp(35px, 8vw, 45px);
+            transform-origin: center calc(clamp(300px, 80vw, 450px) / 2 - 20px); /* 动态原点 */
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        /* 奖品文字旋转定位 */
+        .prize-1 { transform: rotate(30deg); }
+        .prize-1 span { transform: rotate(-30deg); }
+        .prize-2 { transform: rotate(90deg); }
+        .prize-2 span { transform: rotate(-90deg); }
+        .prize-3 { transform: rotate(150deg); }
+        .prize-3 span { transform: rotate(-120deg); }
+        .prize-4 { transform: rotate(210deg); }
+        .prize-4 span { transform: rotate(-180deg); }
+        .prize-5 { transform: rotate(270deg); }
+        .prize-5 span { transform: rotate(-240deg); }
+        .prize-6 { transform: rotate(330deg); }
+        .prize-6 span { transform: rotate(-300deg); }
+        /* 指针 - 自适应位置和大小 */
+        .pointer {
+            position: absolute;
+            top: calc((clamp(250px, 80vw, 150px) / 2) - 35px);
+            left: 50%;
+            width: clamp(35px, 8vw, 45px);
+            height: clamp(40px, 12vw, 140px);
+            background: #ff9f1c;
+            clip-path: polygon(50% 0, 25% 100%, 85% 100%);
+            transform: translateX(-50%);
+            z-index: 2;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            border-bottom: 3px solid #e78f08;
+        }
+        /* 开始按钮 - 增大点击区域 */
+        .start-btn {
+            margin-top: clamp(15px, 3vw, 20px);
+            padding: clamp(12px, 3vw, 14px) clamp(30px, 8vw, 40px);
+            background: #2d3748;
+            color: #fff;
+            border: none;
+            border-radius: 35px;
+            font-size: clamp(16px, 4vw, 20px);
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(45,55,72,0.3);
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            width: clamp(200px, 50vw, 280px); /* 自适应宽度 */
+            touch-action: manipulation;
+        }
+        .start-btn:hover {
+            background: #1a202c;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(45,55,72,0.4);
+        }
+        .start-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        /* 中奖提示 - 自适应字体 */
+        .result {
+            margin-top: clamp(15px, 3vw, 25px);
+            font-size: clamp(16px, 3.5vw, 18px);
+            color: #2d3748;
+            height: clamp(20px, 4vw, 24px);
+            font-weight: 500;
+            text-align: center;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">究竟是谁来回答问题呢？</h1>
+    <div class="wheel-container">
+        <div class="wheel" id="wheel">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <div class="prize prize-1"><span>组长！！！</span></div>
+            <div class="prize prize-2"><span>冯泳杰</span></div>
+            <div class="prize prize-3"><span>李博一</span></div>
+            <div class="prize prize-4"><span>芦梓超</span></div>
+            <div class="prize prize-5"><span>吉宏武</span></div>
+            <div class="prize prize-6"><span>张雨禾</span></div>
+        </div>
+        <div class="pointer"></div>
+    </div>
+    <button class="start-btn" id="startBtn">开始抽奖</button>
+    <div class="result" id="result"></div>
+
+    <script>
+        const wheel = document.getElementById('wheel');
+        const startBtn = document.getElementById('startBtn');
+        const result = document.getElementById('result');
+        let isSpinning = false;
+        let currentRotation = 0;
+
+        // 适配触摸点击（同时支持点击和触摸）
+        startBtn.addEventListener('click', spinWheel);
+        startBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // 阻止默认触摸行为
+            spinWheel();
+        });
+
+        function spinWheel() {
+            if (isSpinning) return;
+
+            isSpinning = true;
+            startBtn.disabled = true;
+            startBtn.textContent = '抽奖中...';
+            result.textContent = '';
+
+            const randomTime = Math.random() * 2 + 2;
+            const randomAngle = 360 * 5 + Math.floor(Math.random() * 360);
+            currentRotation += randomAngle;
+
+            wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                isSpinning = false;
+                startBtn.disabled = false;
+                startBtn.textContent = '开始抽奖';
+
+                const finalAngle = currentRotation % 360;
+                const prizeIndex = Math.floor((360 - finalAngle) / 60);
+                const prizes = ['张雨禾', '组长又是你啊！', '冯泳杰', '李博一', '芦梓超', '吉宏武'];
+                const winningPrize = prizes[prizeIndex];
+
+                result.textContent = `恭喜！抽中【${winningPrize}】`;
+            }, randomTime * 1000);
+        }
+    </script>
+</body>
+</html>
