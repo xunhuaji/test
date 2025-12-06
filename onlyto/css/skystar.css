@@ -1,0 +1,119 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    perspective: 1300px;
+}
+.texttwo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%);
+}
+.textone {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translateX(-50%);
+}
+.textthree {
+    position: absolute;
+    left: 50%;
+    top: 60%;
+    transform: translateX(-50%);
+}
+/* 全局变量：控制轮播核心参数 */
+:root {
+    --margin-top: 520px;                /* 容器上外边距 */
+    --single-ani-duration: 2s;         /* 单句动画时长（淡入+停留+淡出） */
+    --base-delay: 0s;
+    --index: 0/* 动画基础延迟 */
+}
+
+/* 轮播容器：固定位置，让所有文字重叠 */
+.word-box {
+    position: relative;
+    width: 600px;                      /* 加宽适配长句子 */
+    height: 60px;
+    line-height: 60px;
+    font-size: 18px;
+    margin-top: var(--margin-top);
+    overflow: hidden;                  /* 防止文字溢出 */
+}
+
+/* 单个文字块样式修正 */
+.word-box .word {  /* 修复选择器（空格分隔子元素） */
+    position: absolute;
+    top:0px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 30px;
+    opacity: 0;
+    text-align: center;
+    color: pink;
+    font-family: '楷体';
+    /* 新增：动画结束后保持最后一帧状态（完全透明） */
+    animation-fill-mode: forwards;
+    /* 调整动画时长，让单句显示更清晰（如3s），总周期=元素数量*单句时长 */
+    animation: fadeInOut 3s linear infinite;
+    animation-delay: calc(var(--index) * 3s);
+    /* 新增：层级随索引递增，避免底层元素覆盖 */
+    z-index: calc(var(--index));
+}
+/* 为三个文本块的h1添加过渡效果 */
+.textone h1, .texttwo h1, .textthree h1 {
+    transition: opacity 1s ease, transform 1s ease; /* 平滑过渡 */
+}
+
+/* 隐藏状态（用于初始隐藏和淡出后） */
+.text-hidden {
+    opacity: 0 !important;
+    transform: translateX(-50%) translateY(10px) !important; /* 轻微位移增强效果 */
+}
+/* 基础按钮样式：仅边框和文字 */
+.return-btn {
+    /* 移除默认按钮样式 */
+    border: none;
+    background: transparent; /* 透明背景 */
+    padding: 8px 20px; /* 内边距（上下 8px，左右 20px） */
+
+    /* 边框样式 */
+    border: 2px solid #E8F9FD; /* 边框颜色（与文字色调统一） */
+    border-radius: 4px; /* 可选：轻微圆角更美观 */
+
+    /* 文字样式（匹配页面现有风格） */
+    color: #E8F9FD; /* 文字颜色 */
+    font-family: '楷体'; /* 与页面一致的字体 */
+    font-size: 18px; /* 文字大小 */
+
+    /* 交互效果 */
+    cursor: pointer; /* 鼠标悬停显示手型 */
+    transition: all 0.3s; /* 过渡动画，使交互更平滑 */
+}
+
+/* 鼠标悬停效果（可选增强） */
+.return-btn:hover {
+    background-color: rgba(232, 249, 253, 0.1); /* 轻微背景色 */
+    border-color: #B1BCE6; /* 边框颜色变化 */
+    transform: translateY(-2px); /* 轻微上浮效果 */
+}
+
+/* 点击效果（可选） */
+.return-btn:active {
+    transform: translateY(0); /* 点击时恢复位置 */
+}
+/* 调整动画关键帧，延长完全透明的时间区间 */
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(5px); }
+    10% { opacity: 1; transform: translateY(0); }
+    80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(5px); } /* 完全透明状态 */
+}

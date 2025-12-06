@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>带你看星星</title>
+    <style>
+      #videofilm {
+        width: 100%;
+        height: 100%;
+        background-color: #000000;
+        position: fixed;
+        z-index: -1;
+      }
+      h1{
+        font-size: 36px;
+        color: #B1BCE6;
+        font-family: '楷体';
+      }
+
+    </style>
+    <link rel="stylesheet" href="css/skystar.css">
+  </head>
+  <body>
+    <video id="videofilm" poster="img/skystar2.jpg" autoplay muted loop>
+      <source src="video/skystar.mp4" type="video/mp4">
+    </video>
+    <div class="textone">
+      <h1>愿姑娘，天天开心呀！</h1>
+    </div>
+    <div class="texttwo">
+      <h1></h1>
+    </div>
+    <div class="textthree">
+      <h1></h1>
+    </div>
+
+
+    <div class="word-box"></div> <!-- 修正容器类名 -->
+    <div class="return"> </div>
+    <script src="js/skystar.js"></script>
+
+
+  </body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <style>
+        /* 重置默认样式，确保没有边距和内边距 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 设置body占满整个屏幕 */
+        body {
+            background-color: #ffc0cb;
+            width: 100vw;    /* 宽度占满视口宽度 */
+            height: 100vh;   /* 高度占满视口高度 */
+            overflow: hidden;/* 隐藏滚动条，防止出现滚动 */
+            position: relative; /* 为粒子画布定位做准备 */
+        }
+
+        /* 强制particles.js生成的画布占满body */
+        #particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* 确保画布在最底层，不影响其他内容 */
+        }
+        .text-box{
+            position: absolute;
+            top: 25%; /* 垂直居中 */
+            width: 100%;
+            text-align: center;
+        }
+        .text{
+            text-align: center;
+            font-size: 300%;
+            color: #FFFFFF;
+        }
+        /* 按钮容器样式优化 */
+        .box {
+            background-color: rgba(245, 245, 245, 0.8); /* 半透明白色，不遮挡粒子 */
+            position: absolute;
+            top: 50%; /* 垂直居中 */
+            left: 50%; /* 水平居中 */
+            transform: translate(-50%, -50%); /* 真正居中 */
+            width: 80%; /* 适配不同屏幕宽度 */
+            max-width: 600px; /* 限制最大宽度 */
+            padding: 20px;
+            border-radius: 10px; /* 圆角 */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 阴影增加层次感 */
+            z-index: 10; /* 确保按钮在粒子之上 */
+            display: flex; /* 弹性布局排列按钮 */
+            justify-content: space-around; /* 按钮均匀分布 */
+            align-items: center;
+        }
+
+        /* 按钮通用样式 */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #ff6b9d;
+            color: white;
+            text-decoration: none; /* 去掉下划线 */
+            border-radius: 6px;
+            font-size: 16px;
+            font-family: "Microsoft Yahei", sans-serif;
+            cursor: pointer; /* 鼠标悬浮显示手型 */
+            transition: all 0.3s ease; /* 过渡动画 */
+            border: none;
+        }
+
+        /* 按钮悬浮效果 */
+        .btn:hover {
+            background-color: #ff4a85;
+            transform: translateY(-3px); /* 轻微上移 */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 不同按钮可自定义颜色（可选） */
+        .firework-btn {
+            background-color: #ff9a9e;
+        }
+        .firework-btn:hover {
+            background-color: #ff7a7f;
+        }
+
+        .letter-btn {
+            background-color: #fad0c4;
+        }
+        .letter-btn:hover {
+            background-color: #fac0b4;
+        }
+
+        .star-btn {
+            background-color: #fbc2eb;
+        }
+        .star-btn:hover {
+            background-color: #f9a2db;
+        }
+    </style>
+</head>
+<body id="body">
+
+<!-- 专门用于承载粒子特效的容器（比直接用body更可控） -->
+<div id="particles-js"></div>
+<div class="text-box">
+    <p class = "text">
+        生日快乐！
+    </p>
+</div>
+<!-- 按钮容器 -->
+<div class="box">
+    <a href="2024_plus.html" class="firework-btn btn">去看烟花</a>
+    <a href="letter.html" class="letter-btn btn">查看信封</a>
+    <a href="skystar.html" class="star-btn btn">去看星星</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script>
+    // 注意：这里选择器改为#particles-js（专门的容器），比直接用body更稳定
+    particlesJS("particles-js", {
+        "particles": {
+            "number": {
+                "value": 80,
+                "density": {
+                    "enable": true,
+                    "value_area": 800
+                }
+            },
+            "color": {
+                "value": "#ffffff"
+            },
+            "shape": {
+                "type": "circle"
+            },
+            "opacity": {
+                "value": 0.5,
+                "random": true
+            },
+            "size": {
+                "value":30,
+                "random": true
+            },
+            "line_linked": {
+                "enable": false,
+                "distance": 0,
+                "color": "none",
+                "opacity": 1,
+                "width": 0
+            },
+            "move": {
+                "enable": true,
+                "speed": 5,
+                "direction": "none",
+                "random": true,
+                "straight": false,
+                "out_mode": "out",
+                "attract": {
+                    "enable": true,
+                    "rotateX": 600,
+                    "rotateY": 1200
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "repulse"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "push"
+                },
+                "resize": true
+            }
+        },
+        "retina_detect": true
+    });
+</script>
+</body>
+</html>
